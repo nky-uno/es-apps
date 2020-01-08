@@ -1,0 +1,48 @@
+version: "3.7"
+services:
+  es-list:
+    restart: always
+    hostname: es-list.nky.uno
+    image: es-list
+    container_name: es-list
+    build:
+      context: .
+      args:
+        project_directory: "/projects/"
+    ports:
+      - "5000:5000"
+    volumes:
+      - "./list:/projects"
+    environment:
+      VIRTUAL_HOST: es-list.nky.uno
+      VIRTUAL_PORT: 5000
+      LETSENCRYPT_HOST: es-list.nky.uno
+      TZ: "Asia/Tokyo"
+      FLASK_ENV: "development"
+    command: "flask run --host 0.0.0.0 --port 5000"
+
+  es-graph:
+    restart: always
+    hostname: es-graph.nky.uno
+    image: es-graph
+    container_name: es-graph
+    build:
+      context: .
+      args:
+        project_directory: "/projects/"
+    ports:
+      - "6000:6000"
+    volumes:
+      - "./graph:/projects"
+    environment:
+      VIRTUAL_HOST: es-graph.nky.uno
+      VIRTUAL_PORT: 6000
+      LETSENCRYPT_HOST: es-graph.nky.uno
+      TZ: "Asia/Tokyo"
+      FLASK_ENV: "development"
+    command: "flask run --host 0.0.0.0 --port 6000"
+
+networks:
+  default:
+    external:
+      name: shared
